@@ -16,4 +16,15 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.on('/').render('welcome')
+//Route.on('/').render('welcome')
+
+Route.group(() => {
+    Route.post('login', 'AuthController.login');
+    Route.post('register', 'AuthController.register').validator('StoreUser');
+
+    Route.resource('viajes', 'ViajeController').middleware(['auth:api'])
+        .validator(new Map([
+            ['viajes.store', 'StoreViaje']
+        ]));
+
+}).prefix('api/v1');
